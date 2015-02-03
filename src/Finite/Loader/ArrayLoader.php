@@ -104,7 +104,9 @@ class ArrayLoader implements LoaderInterface
     {
         $resolver = new OptionsResolver;
         $resolver->setRequired(array('from', 'to'));
-        $resolver->setDefaults(array('guard' => null));
+        $resolver->setOptional(array('guard'));
+        $resolver->setDefault('guard',null);
+
         $resolver->setNormalizers(array(
             'from' => function (Options $options, $v) { return (array) $v; },
             'guard' => function (Options $options, $v) { return !isset($v) ? null : $v; }
@@ -112,7 +114,7 @@ class ArrayLoader implements LoaderInterface
 
         foreach ($this->config['transitions'] as $transition => $config) {
             $config = $resolver->resolve($config);
-            $stateMachine->addTransition(new Transition($transition, $config['from'], $config['to'], $config['guard']));
+            $stateMachine->addTransition(new Transition($transition, $config['from'], $config['to'] , $config['guard']));
         }
     }
 
